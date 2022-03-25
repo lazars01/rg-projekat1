@@ -32,7 +32,7 @@ const unsigned int SCR_HEIGHT = 600;
 bool cursorEnabled = false;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 3.0f, 0.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -81,6 +81,7 @@ int main() {
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
     glfwSetKeyCallback(window, key_callback);
+
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -248,11 +249,46 @@ int main() {
     // --------------------------------
     vector<glm::vec3> vegetation
             {
-                    glm::vec3(-1.5f, 3.0f, -0.48f),
-                    glm::vec3( 1.5f, 3.0f, 0.51f),
-                    glm::vec3( 0.0f, 3.0f, 0.7f),
-                    glm::vec3(-0.3f, 3.0f, -2.3f),
-                    glm::vec3 (0.5f, 3.0f, -0.6f)
+                    glm::vec3(7.0f, 2.5f, 12.5f),
+                    glm::vec3(5.0f, 2.5f, 12.5f),
+                    glm::vec3(3.0f, 2.5f, 12.5f),
+                    glm::vec3(0.0f, 2.5f, 12.5f),
+                    glm::vec3(-3.0f, 2.5f, 12.5f),
+                    glm::vec3(-6.0f, 2.5f, 12.5f),
+                    glm::vec3(-9.0f, 2.5f, 12.5f),
+                    glm::vec3(-12.0f, 2.5f, 12.5f),
+                    glm::vec3(-14.0f, 2.5f, 12.5f),
+                    glm::vec3(7.0f, 2.5f, -12.5f),
+                    glm::vec3(5.0f, 2.5f, -12.5f),
+                    glm::vec3(3.0f, 2.5f, -12.5f),
+                    glm::vec3(0.0f, 2.5f, -12.5f),
+                    glm::vec3(-3.0f, 2.5f, -12.5f),
+                    glm::vec3(-6.0f, 2.5f, -12.5f),
+                    glm::vec3(-9.0f, 2.5f, -12.5f),
+                    glm::vec3(-12.0f, 2.5f, -12.5f),
+                    glm::vec3(-14.0f, 2.5f, -12.5f)
+            };
+
+    vector<glm::vec3> vegetationRotated =
+            {
+                    glm::vec3(12.5f, 2.5f, 15.0f),
+                    glm::vec3(12.5f, 2.5f, 13.0f),
+                    glm::vec3(12.5f, 2.5f, 10.0f),
+                    glm::vec3(12.5f, 2.5f, 7.0f),
+                    glm::vec3(12.5f, 2.5f, 4.0f),
+                    glm::vec3(12.5f, 2.5f, 1.0f),
+                    glm::vec3(12.5f, 2.5f, -2.0f),
+                    glm::vec3(12.5f, 2.5f, -5.0f),
+                    glm::vec3(12.5f, 2.5f, -8.0f),
+                    glm::vec3(-12.5f, 2.5f, 15.0f),
+                    glm::vec3(-12.5f, 2.5f, 13.0f),
+                    glm::vec3(-12.5f, 2.5f, 10.0f),
+                    glm::vec3(-12.5f, 2.5f, 7.0f),
+                    glm::vec3(-12.5f, 2.5f, 4.0f),
+                    glm::vec3(-12.5f, 2.5f, 1.0f),
+                    glm::vec3(-12.5f, 2.5f, -2.0f),
+                    glm::vec3(-12.5f, 2.5f, -5.0f),
+                    glm::vec3(-12.5f, 2.5f, -8.0f)
             };
 
     // blending shader configuration
@@ -261,11 +297,11 @@ int main() {
     blendingShader.setInt("texture1", 0);
 
     //before loading model
-    stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(false);
 
     // load models
     // -----------
-    Model ourModel("resources/objects/backpack/backpack.obj");
+    Model ourModel("resources/objects/ufo/Low_poly_UFO.obj");
     ourModel.SetShaderTextureNamePrefix("material.");
 
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
@@ -327,8 +363,8 @@ int main() {
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model,
-                               backpackPosition); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(backpackScale));    // it's a bit too big for our scene, so scale it down
+                               glm::vec3(10 * cos(glfwGetTime()/2), 7.0f, 10 * sin(glfwGetTime()/2))); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(0.05f));    // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
 
@@ -338,7 +374,7 @@ int main() {
 
         // world transformation
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -0.51f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(25.0f));
         ourShader.setMat4("model", model);
@@ -390,7 +426,16 @@ int main() {
         {
             model = glm::mat4(1.0f);
             model = glm::translate(model, vegetation[i]);
-            model = glm::scale(model, glm::vec3(25.0f));
+            model = glm::scale(model, glm::vec3(7.0f));
+            blendingShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }
+        for (unsigned int i = 0; i < vegetationRotated.size(); i++)
+        {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, vegetationRotated[i]);
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(7.0f));
             blendingShader.setMat4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
