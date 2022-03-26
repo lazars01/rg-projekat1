@@ -301,8 +301,24 @@ int main() {
 
     // load models
     // -----------
-    Model ourModel("resources/objects/ufo/Low_poly_UFO.obj");
-    ourModel.SetShaderTextureNamePrefix("material.");
+    Model ufoModel("resources/objects/ufo/Low_poly_UFO.obj");
+    ufoModel.SetShaderTextureNamePrefix("material.");
+
+    Model stallModel("resources/objects/proba/model/silo.obj");
+    stallModel.SetShaderTextureNamePrefix("material.");
+
+
+    // coords for models
+    // -----------------
+    vector <glm::vec3> stalls =
+            {
+                    glm::vec3(10.5f, 0.0f, 11.0f),
+                    glm::vec3(10.5f, 0.0f, 6.0f),
+                    glm::vec3(10.5f, 0.0f, 1.0f),
+                    glm::vec3(10.5f, 0.0f, -4.0f),
+                    glm::vec3(10.5f, 0.0f, -9.0f)
+            };
+
 
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
     pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
@@ -360,14 +376,24 @@ int main() {
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
-        // render the loaded model
+        // render the loaded models
+
+        // ufo model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model,
                                glm::vec3(10 * cos(glfwGetTime()/2), 7.0f, 10 * sin(glfwGetTime()/2))); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(0.05f));    // it's a bit too big for our scene, so scale it down
         ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
+        ufoModel.Draw(ourShader);
 
+        // stall model
+        for(unsigned int i = 0; i < stalls.size(); i++) {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, stalls[i]);
+            model = glm::scale(model, glm::vec3(0.1f));
+            ourShader.setMat4("model", model);
+            stallModel.Draw(ourShader);
+        }
 
         // material properties
         ourShader.setFloat("material.shininess", 256.0f);
