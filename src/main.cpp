@@ -310,6 +310,12 @@ int main() {
     Model hutModel("resources/objects/hut/woodshed.obj");
     hutModel.SetShaderTextureNamePrefix("material.");
 
+    Model wellModel("resources/objects/well/well.obj");
+    wellModel.SetShaderTextureNamePrefix("material.");
+
+    Model fenceModel("resources/objects/fence/fence wood.obj");
+    fenceModel.SetShaderTextureNamePrefix("material.");
+
     // coords for models
     // -----------------
     vector <glm::vec3> stalls =
@@ -344,6 +350,46 @@ int main() {
                     glm::vec3(-4.5f, 0.0f, 6.5f),
                     glm::vec3(-4.5f, 0.0f, 9.25f),
                     glm::vec3(-4.5f, 0.0f, 12.0f)
+            };
+
+    vector <glm::vec3> fences =
+            {
+                    glm::vec3(1.0f, 0.0f, -8.0f),
+                    glm::vec3(2.35f, 0.0f, -8.0f),
+                    glm::vec3(3.70f, 0.0f, -8.0f),
+                    glm::vec3(5.05f, 0.0f, -8.0f),
+                    glm::vec3(6.4f, 0.0f, -8.0f),
+                    glm::vec3(1.0f, 0.0f, 8.3f),
+                    glm::vec3(2.35f, 0.0f, 8.3f),
+                    glm::vec3(3.70f, 0.0f, 8.3f),
+                    glm::vec3(5.05f, 0.0f, 8.3f),
+                    glm::vec3(6.4f, 0.0f, 8.3f)
+            };
+
+    vector <glm::vec3> fencesRotated =
+            {
+                    glm::vec3(0.3f, 0.0f, -7.15f),
+                    glm::vec3(0.3f, 0.0f, -5.8f),
+                    glm::vec3(0.3f, 0.0f, -4.45f),
+                    glm::vec3(0.3f, 0.0f, -3.10f),
+                    glm::vec3(0.3f, 0.0f, -1.75f),
+                    glm::vec3(0.3f, 0.0f, -0.4f),
+                    glm::vec3(0.3f, 0.0f, 0.95f),
+                    glm::vec3(0.3f, 0.0f, 2.30f),
+                    glm::vec3(0.3f, 0.0f, 3.65f),
+                    glm::vec3(0.3f, 0.0f, 5.0f),
+                    glm::vec3(0.3f, 0.0f, 6.35f),
+                    glm::vec3(0.3f, 0.0f, 7.7f),
+                    glm::vec3(7.12f, 0.0f, -7.15f),
+                    glm::vec3(7.12f, 0.0f, -5.8f),
+                    glm::vec3(7.12f, 0.0f, -4.45f),
+                    glm::vec3(7.12f, 0.0f, -3.10f),
+                    glm::vec3(7.12f, 0.0f, -1.75f),
+                    glm::vec3(7.12f, 0.0f, 2.30f),
+                    glm::vec3(7.12f, 0.0f, 3.65f),
+                    glm::vec3(7.12f, 0.0f, 5.0f),
+                    glm::vec3(7.12f, 0.0f, 6.35f),
+                    glm::vec3(7.12f, 0.0f, 7.7f)
             };
 
     // lights configuration
@@ -442,6 +488,51 @@ int main() {
             ourShader.setMat4("model", model);
             hutModel.Draw(ourShader);
         }
+
+        // well model
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(4.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.15f));
+        ourShader.setMat4("model", model);
+        wellModel.Draw(ourShader);
+
+        // fence model
+        for(unsigned int i = 0; i < fences.size(); i++)
+        {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, fences[i]);
+            model = glm::scale(model, glm::vec3(0.8f));
+            ourShader.setMat4("model", model);
+            fenceModel.Draw(ourShader);
+        }
+
+        for(unsigned int i = 0; i < fencesRotated.size(); i ++){
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, fencesRotated[i]);
+            model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.8f));
+            ourShader.setMat4("model", model);
+            fenceModel.Draw(ourShader);
+        }
+
+        // TODO: add gate closing/opening on some key
+        // closed coords: (swapped)
+        // glm::vec3(7.12f, 0.0f, -0.4f),
+        // glm::vec3(7.12f, 0.0f, 0.95f),
+        // closed angle: 90
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(6.55f, 0.0f, 2.05f));
+        model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.8f));
+        ourShader.setMat4("model", model);
+        fenceModel.Draw(ourShader);
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(6.65f, 0.0f, -1.7f));
+        model = glm::rotate(model, glm::radians(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.8f));
+        ourShader.setMat4("model", model);
+        fenceModel.Draw(ourShader);
 
         // material properties
         ourShader.setFloat("material.shininess", 256.0f);
