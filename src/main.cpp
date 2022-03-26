@@ -307,6 +307,8 @@ int main() {
     Model stallModel("resources/objects/proba/model/silo.obj");
     stallModel.SetShaderTextureNamePrefix("material.");
 
+    Model hutModel("resources/objects/hut/woodshed.obj");
+    hutModel.SetShaderTextureNamePrefix("material.");
 
     // coords for models
     // -----------------
@@ -319,7 +321,32 @@ int main() {
                     glm::vec3(10.5f, 0.0f, -9.0f)
             };
 
+    vector <glm::vec3> hutsRotated =
+            {
+                    glm::vec3(-9.5f, 0.0f, -12.0f),
+                    glm::vec3(-9.5f, 0.0f, -9.25f),
+                    glm::vec3(-9.5f, 0.0f, -6.5f),
+                    glm::vec3(-9.5f, 0.0f, -3.75f),
+                    glm::vec3(-9.5f, 0.0f, -1.0f),
+                    glm::vec3(-9.5f, 0.0f, 1.75f),
+                    glm::vec3(-9.5f, 0.0f, 4.5f),
+                    glm::vec3(-9.5f, 0.0f, 7.25f),
+                    glm::vec3(-9.5f, 0.0f, 10.0f)
+            };
 
+    vector <glm::vec3> huts =
+            {
+                    glm::vec3(-4.5f, 0.0f, -10.0f),
+                    glm::vec3(-4.5f, 0.0f, -7.25f),
+                    glm::vec3(-4.5f, 0.0f, -4.5f),
+                    glm::vec3(-4.5f, 0.0f, -1.75f),
+                    glm::vec3(-4.5f, 0.0f, 3.75f),
+                    glm::vec3(-4.5f, 0.0f, 6.5f),
+                    glm::vec3(-4.5f, 0.0f, 9.25f),
+                    glm::vec3(-4.5f, 0.0f, 12.0f)
+            };
+
+    // lights configuration
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
     pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
     pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
@@ -369,6 +396,7 @@ int main() {
         ourShader.setFloat("pointLight.quadratic", pointLight.quadratic);
         ourShader.setVec3("viewPosition", camera.Position);
         ourShader.setFloat("material.shininess", 32.0f);
+
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
                                                 (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
@@ -387,12 +415,32 @@ int main() {
         ufoModel.Draw(ourShader);
 
         // stall model
-        for(unsigned int i = 0; i < stalls.size(); i++) {
+        for(unsigned int i = 0; i < stalls.size(); i++)
+        {
             model = glm::mat4(1.0f);
             model = glm::translate(model, stalls[i]);
             model = glm::scale(model, glm::vec3(0.1f));
             ourShader.setMat4("model", model);
             stallModel.Draw(ourShader);
+        }
+
+        // hut model
+        for(unsigned int i = 0; i < hutsRotated.size(); i ++)
+        {
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, hutsRotated[i]);
+            model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.005f));
+            ourShader.setMat4("model", model);
+            hutModel.Draw(ourShader);
+        }
+
+        for(unsigned int i = 0; i < huts.size(); i++){
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, huts[i]);
+            model = glm::scale(model, glm::vec3(0.005f));
+            ourShader.setMat4("model", model);
+            hutModel.Draw(ourShader);
         }
 
         // material properties
